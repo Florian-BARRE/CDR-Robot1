@@ -11,8 +11,6 @@ void Complex_Action::alloc_memory(short nb_actions){
 
 void Complex_Action::handle(float current_x, float current_y, float current_theta, long current_right_ticks, long current_left_ticks, Motor *right_motor, Motor *left_motor, Rolling_Basis_Params *rolling_basis_params)
 {
-    Serial.println(String("INDEX: ") + String(this->action_index));
-
     if(!this->is_computed)
         this->compute(current_x, current_y, current_theta, current_right_ticks, current_left_ticks, rolling_basis_params);
     if (0 <= this->action_index && this->action_index < this->basic_actions_list_size){

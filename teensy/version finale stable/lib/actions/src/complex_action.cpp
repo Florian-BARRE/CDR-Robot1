@@ -21,6 +21,7 @@ void Complex_Action::handle(Point current_point, Ticks current_ticks, Rolling_Ba
     if (0 <= this->movement_index && this->movement_index < this->nb_basic_movements)
     {
         this->state = in_progress;
+
         // Handle action
         if (
                 this->basic_movements[this->movement_index]->state == not_started ||
@@ -95,9 +96,8 @@ void Curve_Go_To::compute(Point current_point, Ticks current_ticks, Rolling_Basi
     float distance = radius * dif_angle;
 
     // Calcul nb of points on the trajectory
-    int nb_points = distance / this->interval;
+    int nb_points = abs(distance / this->interval);
     this->alloc_memory(nb_points * 2);
-
 
     for (int k = 0; k < nb_points; k+=2)
     {

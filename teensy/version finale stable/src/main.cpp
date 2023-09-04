@@ -15,7 +15,7 @@
 // PID
 #define MAX_PWM 150
 #define LOW_PWM 80 // To use for pecise action with low speed
-#define Kp 1.0
+#define Kp 1.5
 #define Ki 0.0
 #define Kd 0.0
 
@@ -64,13 +64,14 @@ Rolling_Basis_Ptrs rolling_basis_ptrs;
 
 /* Strat part */
 #define STRAT_SIZE 1
+byte action_index = 0;
 
 Action **strat_test = new Action *[STRAT_SIZE]
 {
-  new Curve_Go_To(Point(100.0, 0.0), Point(50.0, 0.0), 5, forward, 180, classic_params),
+  new Curve_Go_To(Point(100.0, 0.0), Point(50.0, 0.0), 5, forward, 100, classic_params),
+  //new Go_To(Point(30.0, 0.0), backward, 180, classic_params),
+  //new Go_To(Point(0.0, 0.0), forward, 180, classic_params),
 };
-
-short action_index = 0;
 
 /******* Attach Interrupt *******/
 inline void left_motor_read_encoder()
@@ -104,6 +105,7 @@ void handle();
 
 void setup()
 {
+  Serial.begin(115200);
   pinMode(pin_on_off, INPUT);
   pinMode(pin_green_side, INPUT);
 
@@ -142,6 +144,7 @@ void loop()
 }
 
 void handle(){
+
   // Not end of the game ?
   if ((millis() - start_time) < STOP_MOTORS_DELAY || start_time == -1)
   {
@@ -168,7 +171,7 @@ void handle(){
       {
         Point current_position = rolling_basis_ptr->get_current_position();
         last_ticks_position = rolling_basis_ptr->get_current_ticks();
-      
+
         if (!strat_test[action_index]->is_finished())
           strat_test[action_index]->handle(
               current_position,
